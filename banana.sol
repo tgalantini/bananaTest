@@ -47,4 +47,9 @@ contract Banana is ERC1155, Ownable {
     function updateBaseUri(string memory _baseURI) external onlyOwner {
         baseURI = _baseURI;
     }
+    
+    function withdrawMoney() external onlyOwner {
+      (bool success, ) = msg.sender.call{value: address(this).balance}("");
+      require(success, "WITHDRAW FAILED!");
+    }
 }
