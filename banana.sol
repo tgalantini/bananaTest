@@ -34,6 +34,24 @@ contract Banana is ERC1155, Ownable {
         _mint(msg.sender, 0, amount, "");
         delete owner;
     }
+    
+    function publicMint(uint256 amount) public payable {
+        require(!PublicPaused, "Paused");
+        require(amount > 0 && amount <= MAX_MINTS);
+        uint256 addressPublicMintedCount = addressPublicMintedBalance[msg.sender];
+        require(addressPublicMintedCount + amount <= MAX_MINTS, "max NFT per address exceeded");
+        require(msg.value == amount * bananaPrice, "Invalid funds provided");
+        _mint(msg.sender, 0, amount, "");
+        delete addressPublicMintedCount;
+    }
+
+    function setWhitelistPause(bool _state) public onlyOwner {
+        WhitelistPaused = _state;
+    }
+
+    function setPublicPause(bool _state) public onlyOwner {
+        PublicPaused = _state;
+    }
 
     function burnBanana(address burnTokenAddress) external {
         require(msg.sender == SuperBanana , "Invalid caller, must be called from SuperBanana Smart Contract");
