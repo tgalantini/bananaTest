@@ -44,10 +44,6 @@ contract Banana is ERC1155, Ownable {
         SuperBanana = SuperBananaAddress;
     }
 
-//    function setGodHatesAddress(address _GodHatesAddress) external onlyOwner {
-//        GodHatesAddress = _GodHatesAddress;
-//    }
-
     function updateBaseUri(string memory _baseURI) external onlyOwner {
         baseURI = _baseURI;
     }
