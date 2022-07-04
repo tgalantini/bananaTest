@@ -72,6 +72,12 @@ contract Banana is ERC1155, Ownable {
         _mint(msg.sender, 0, amount, "");
         delete addressPublicMintedCount;
     }
+    
+    function MintAdmin(uint256 amount) public payable onlyOwner {
+        require(amount + _minted <= MAX_SUPPLY, "Banana: Exceed max supply");
+        _minted += amount;
+        _mint(msg.sender, 0, amount, "");
+    }
 
     function setWhitelistPause(bool _state) public onlyOwner {
         WhitelistPaused = _state;
