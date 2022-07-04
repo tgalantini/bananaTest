@@ -46,7 +46,7 @@ contract Banana is ERC1155, Ownable {
         symbol = _symbol;
     }
   
-    function whitelistMint(uint256 amount, uint256 NfTeesId) public payable {
+    function MintWhitelist(uint256 amount, uint256 NfTeesId) public payable {
         require(!WhitelistPaused, "Whitelist sale is paused");
         require(amount + _minted <= MAX_SUPPLY, "Banana: Exceed max supply");
         address _owner = NFTEE.ownerOf(NfTeesId);
@@ -59,7 +59,7 @@ contract Banana is ERC1155, Ownable {
         delete _owner;
     }
     
-    function publicMint(uint256 amount) public payable {
+    function MintPublic(uint256 amount) public payable {
         require(!PublicPaused, "Paused");
         require(amount > 0 && amount <= MAX_MINTS);
         uint256 addressPublicMintedCount = addressPublicMintedBalance[msg.sender];
