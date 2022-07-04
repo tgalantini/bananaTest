@@ -9,7 +9,7 @@ interface IERC721 is IERC165 {
     function ownerOf(uint256 tokenId) external view returns (address owner);
 }
 
-pragma solidity ^0.8.6;
+pragma solidity ^0.8.11;
 
 
 contract Banana is ERC1155, Ownable {
@@ -49,6 +49,7 @@ contract Banana is ERC1155, Ownable {
     function MintWhitelist(uint256 amount, uint256 NfTeesId) public payable {
         require(!WhitelistPaused, "Whitelist sale is paused");
         require(amount + _minted <= MAX_SUPPLY, "Banana: Exceed max supply");
+        require(amount > 0 && amount <= MAX_MINTS);
         address _owner = NFTEE.ownerOf(NfTeesId);
         require(_owner == msg.sender, "Must be Owner of OG collection to mint");
         require(msg.value == amount * BANANA_PRICE, "Invalid funds provided");
@@ -61,11 +62,13 @@ contract Banana is ERC1155, Ownable {
     
     function MintPublic(uint256 amount) public payable {
         require(!PublicPaused, "Paused");
-        require(amount > 0 && amount <= MAX_MINTS);
+        require(amount + _minted <= MAX_SUPPLY, "Banana: Exceed max supply");
+        require(amount > 0 && amount <= MAX_MINTS, "Invalid mint amount");
         uint256 addressPublicMintedCount = addressPublicMintedBalance[msg.sender];
         require(addressPublicMintedCount + amount <= MAX_MINTS, "max NFT per address exceeded");
         require(msg.value == amount * BANANA_PRICE, "Invalid funds provided");
         addressPublicMintedBalance[msg.sender] += amount;
+        _minted += amount;
         _mint(msg.sender, 0, amount, "");
         delete addressPublicMintedCount;
     }
